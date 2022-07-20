@@ -1,14 +1,12 @@
 const { response, request } = require('express');
 const User   = require('../models/user');
 const bcryptjs = require('bcryptjs');
-
+const {CheckFields} = require('../middlewares/checks');
 
 
 
 const usersGet = (req = request, res = response) => {
-
     const { q, nombre = 'No name', apikey, page = 1, limit } = req.query;
-
     res.json({
         msg: 'get API - controlador',
         q,
@@ -21,13 +19,22 @@ const usersGet = (req = request, res = response) => {
 
 const usersPost = async  (req, res = response) => {
 
+
+
     const{name, email, password, role}= req.body;
 
     const user = new User({name, email, password, role});
 
     // Check if the email already exists
-    
-    
+
+    const alreadyeMail = await  User.findOne({email});
+    if(alreadyeMail) 
+        {
+            return res.status(400).json({error:' this email already exists'})
+        } 
+
+      //check is the email format is valid  
+
     // Encrypt the pass
 
     const salt = bcryptjs.genSaltSync();
@@ -44,7 +51,7 @@ const usersPost = async  (req, res = response) => {
    
 
     res.json({
-        msg: 'post API - usersPost',
+        msg: 'User created successfully',
        user:{
             name:user.name,
             email:user.email
