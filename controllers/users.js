@@ -19,29 +19,13 @@ const usersGet = (req = request, res = response) => {
 
 const usersPost = async  (req, res = response) => {
 
-
-
     const{name, email, password, role}= req.body;
-
     const user = new User({name, email, password, role});
-
-    // Check if the email already exists
-
-    const alreadyeMail = await  User.findOne({email});
-    if(alreadyeMail) 
-        {
-            return res.status(400).json({error:' this email already exists'})
-        } 
-
-      //check is the email format is valid  
-
     // Encrypt the pass
 
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password,salt);
     //Save in DB 
-
-
     try {
         await user.save();
         console.log(user);
@@ -49,25 +33,28 @@ const usersPost = async  (req, res = response) => {
         console.log(error)
     }
    
-
     res.json({
         msg: 'User created successfully',
-       user:{
-            name:user.name,
-            email:user.email
-       }
-       
-       
+        user:user.toJSON()    
     });
 }
 
-const usersPut = (req, res = response) => {
-
+const usersPut = async (req, res = response) => {
     const { id } = req.params;
 
+    const {password,google,email,...restBody} = req.body;
+
+    // Validate if the id exits
+
+    if(password){
+      const salt = bcryptjs.genSaltSync();
+      restBody.password = bcryptjs.hashSync(password,salt);
+    }
+    const user = await User.findByIdAndUpdate(id,restBody);
     res.json({
         msg: 'put API - usersPut',
-        id
+        id,
+        user
     });
 }
 

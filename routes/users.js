@@ -12,6 +12,8 @@ const { usersGet,
         usersDelete,
         usersPatch } = require('../controllers/users');
 
+const { validateRole, validateDuplicateEmail } = require('../utils/db-validators');
+
 const router = Router();
 
 
@@ -21,20 +23,10 @@ router.put('/:id', usersPut );
 
 router.post('/',[
     check('email','The email is not valid').isEmail(),
+    check('email').custom(email => validateDuplicateEmail(email)),
     check('name', 'Name is required').not().not().isEmpty(),
     check('password', 'Password is required. Min has to over 6 chars').isLength({min: 6}),
-    check('role').custom(async (role='')=>{
-        
-    const roleValid = await Role.findOne({role});
-
-    console.log(`roleValid:${role} `);
-    console.log('antes  del rolevalid')
-    if(!roleValid){
-        throw new Error(`roleValid:${role} is not a valid role`);
-    }else{
-        console.log("pasamos el role valid");
-    }
-   }),
+    check('role').custom((role ) =>validateRole(role)),
     CheckFields
 ], usersPost );
 
