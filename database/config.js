@@ -6,15 +6,9 @@ const dbConnection = async ( ) =>{
     try {
 
         await mongoose.connect(process.env.MONGODB,{
-            
             useUnifiedTopology: true,
-       //     useFindAndModify: false
-         
-         
         });
         console.log('mongo db ready');
-        
-
     } catch (error) {
         console.log(error)
         throw new Error('Error at db Mongo');

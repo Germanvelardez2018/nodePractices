@@ -3,7 +3,7 @@ const User = require('../models/user');
 
    const validateRole =  async (role='')=>{
         
-    const roleValid = await Role.findOne({role});
+    const roleValid = await Role.findOne({role} );
 
     if(!roleValid){
         throw new Error(`roleValid:${role} is not a valid role`);
@@ -22,7 +22,17 @@ const User = require('../models/user');
    }
 
 
+  const existIdUser = async (id = "")=>{
+    const user = await User.findById(id);
+    if(!user){
+        throw new Error(`The id: ${id} doesnt exit` );
+    }
+  }
+
+
+
    module.exports={
     validateRole,
-    validateDuplicateEmail
+    validateDuplicateEmail,
+    existIdUser
    }

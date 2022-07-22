@@ -6,20 +6,28 @@ const {CheckFields} = require('../middlewares/checks');
 
 const Role = require('../models/role');
 
-const { usersGet,
+const { listUsersGet,
+        getUser,
         usersPut,
         usersPost,
         usersDelete,
         usersPatch } = require('../controllers/users');
 
-const { validateRole, validateDuplicateEmail } = require('../utils/db-validators');
+const { validateRole, validateDuplicateEmail, existIdUser } = require('../utils/db-validators');
 
 const router = Router();
 
 
-router.get('/', usersGet );
+router.get('/list', listUsersGet );
+router.get('/',getUser);
 
-router.put('/:id', usersPut );
+router.put('/:id',[
+    check('id', "It isn't a id valid").isMongoId(),
+    check('id').custom((id)=>existIdUser(id)),
+    check('role').custom((role ) =>validateRole(role)),
+
+    CheckFields
+] ,usersPut );
 
 router.post('/',[
     check('email','The email is not valid').isEmail(),

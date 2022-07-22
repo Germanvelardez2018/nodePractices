@@ -5,15 +5,49 @@ const {CheckFields} = require('../middlewares/checks');
 
 
 
-const usersGet = (req = request, res = response) => {
-    const { q, nombre = 'No name', apikey, page = 1, limit } = req.query;
+const getUser = async (req = request, res = response)=>{
+
+
+    let obj = {};
+    const {name,email} = req.query;
+
+
+
+    if (name) {
+       Object.assign(obj,{name});
+
+    }
+    if (email) {
+       Object.assign(obj,{email});
+    }
+    console.log(`buscando obj:`);
+    console.log(obj)
+    let user = await User.find(obj);
+
+   
+   
+   
+
     res.json({
-        msg: 'get API - controlador',
-        q,
-        nombre,
-        apikey,
-        page, 
-        limit
+        msg: 'get user:',
+        user
+    });
+    
+}
+
+
+const listUsersGet = async (req = request, res = response) => {
+  
+
+    const {lim=20 ,from=0,amountByPage=5} = req.query;
+
+    const users = await User.find()
+    .limit(lim)
+    .skip(from);
+
+    res.json({
+        msg: 'get list users',
+        list: users
     });
 }
 
@@ -74,7 +108,8 @@ const usersDelete = (req, res = response) => {
 
 
 module.exports = {
-    usersGet,
+    listUsersGet,
+    getUser,
     usersPost,
     usersPut,
     usersPatch,
