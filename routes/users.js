@@ -38,7 +38,10 @@ router.post('/',[
     CheckFields
 ], usersPost );
 
-router.delete('/', usersDelete );
+router.delete('/:id',
+check('id', "It isn't a id valid").isMongoId(),
+check('id').custom((id)=>existIdUser(id))
+, usersDelete );
 
 router.patch('/', usersPatch );
 

@@ -24,10 +24,6 @@ const getUser = async (req = request, res = response)=>{
     console.log(obj)
     let user = await User.find(obj);
 
-   
-   
-   
-
     res.json({
         msg: 'get user:',
         user
@@ -41,13 +37,24 @@ const listUsersGet = async (req = request, res = response) => {
 
     const {lim=20 ,from=0,amountByPage=5} = req.query;
 
-    const users = await User.find()
-    .limit(lim)
-    .skip(from);
+
+    // I have two promises that they can be work at the time
+
+
+  
+
+  
+
+    const [total,list]  =  await Promise.all([
+        User.countDocuments({state: true}),
+        User.find({state : true}).limit(lim).skip(from),
+    ]);
+
 
     res.json({
         msg: 'get list users',
-        list: users
+        total,
+        list
     });
 }
 
@@ -98,9 +105,15 @@ const usersPatch = (req, res = response) => {
     });
 }
 
-const usersDelete = (req, res = response) => {
+const usersDelete = async (req, res = response) => {
+    const { id } = req.params;
+
+    // truely delete const user = await User.findByIdAndDelete(id);
+     const user = await User.findByIdAndUpdate(id,{state:false});
+
     res.json({
-        msg: 'delete API - usersDelete'
+        id,
+        msg: `the ${user} was deleted`
     });
 }
 
