@@ -1,18 +1,14 @@
 const mongoose = require('mongoose');
 
-
 const dbConnection = async ( ) =>{
-
     try {
-
-        await mongoose.connect(process.env.MONGODB,{
+        await mongoose.connect(process.env.DBCONNECTION,{
             useUnifiedTopology: true,
         });
         console.log('mongo db ready');
     } catch (error) {
         console.log(error)
         throw new Error('Error at db Mongo');
-        
     }
 
 
