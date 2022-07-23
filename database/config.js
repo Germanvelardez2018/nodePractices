@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const dbConnection = async ( ) =>{
     try {
-        await mongoose.connect("mongodb+srv://germandevz:4545logicos2@mycluster.tqgsjov.mongodb.net/users",{
+        await mongoose.connect(process.env.DBCONNECTION,{
             useUnifiedTopology: true,
         });
         console.log('mongo db ready');

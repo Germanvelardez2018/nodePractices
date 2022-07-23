@@ -42,13 +42,21 @@ const listUsersGet = async (req = request, res = response) => {
 
 
   
-
+    let total,list;
   
-
-    const [total,list]  =  await Promise.all([
-        User.countDocuments({state: true}),
-        User.find({state : true}).limit(lim).skip(from),
-    ]);
+    try {
+           [total,list]  =  await Promise.all([
+            User.countDocuments({state: true}),
+            User.find({state : true}).limit(lim).skip(from),
+        ]);
+    } catch (error) {
+        [total,list]=[0.['nothing to show']]
+        
+    }
+   
+   
+   
+   
 
 
     res.json({
