@@ -14,9 +14,10 @@ const getUser = async (req = request, res = response)=>{
     if (email) {
        Object.assign(obj,{email});
     }
-    console.log(`buscando obj:`);
+    console.log(`searching obj:`);
     console.log(obj)
     let user = await User.find(obj);
+    console.log(user);
     res.json({
         msg: 'get user:',
         user
@@ -26,7 +27,6 @@ const getUser = async (req = request, res = response)=>{
 
 
 const listUsersGet = async (req = request, res = response) => {
-  
     const {lim=20 ,from=0,amountByPage=5} = req.query;
     // I have two promises that they can be work at the time
     let total,list;
@@ -60,18 +60,17 @@ const usersPost = async  (req, res = response) => {
     } catch (error) {
         console.log(error)
     }
-   
     res.json({
         msg: 'User created successfully',
         user:user.toJSON()    
     });
 }
 
+
+
 const usersPut = async (req, res = response) => {
     const { id } = req.params;
-
     const {password,google,email,...restBody} = req.body;
-
     // Validate if the id exits
 
     if(password){
