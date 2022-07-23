@@ -7,8 +7,9 @@ const dbConnection = async ( ) =>{
         });
         console.log('mongo db ready');
     } catch (error) {
+        console.log('app crashed--------------------------------------');
         console.log(error)
-        throw new Error('Error at db Mongo');
+        throw new Error('Error at db Mongo---------------------------');
     }
 
 
