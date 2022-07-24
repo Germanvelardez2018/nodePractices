@@ -1,7 +1,7 @@
 const { response, request } = require('express');
 const User   = require('../models/user');
 const bcryptjs = require('bcryptjs');
-const {CheckFields} = require('../middlewares/checks');
+
 
 
 
@@ -47,9 +47,6 @@ const listUsersGet = async (req = request, res = response) => {
 
 
 
-const userLogin= async ()=>{
-
-}
 
 const usersPost = async  (req, res = response) => {
     const{name, email, password, role}= req.body;
@@ -96,17 +93,17 @@ const usersPatch = (req, res = response) => {
 }
 
 const usersDelete = async (req, res = response) => {
-    const { id } = req.params;
-    // truely delete const user = await User.findByIdAndDelete(id);
+    const { id } = req.params;    
     let msg = '';
-    if((req.user.role ) === 'ADMIN_ROLE'){
-    //    console.log(`user: ${req.uid} trying to delete something`)
+    try {
         const user = await User.findByIdAndUpdate(id,{state:false});
-        msg = `the ${user} was deleted bt user: ${req.user.name}`
+        msg = `the ${user} was deleted bt user: ${req.user.name}`;
+    } catch (error) {
+        msg = `err ${error} `
+        
     }
-    else{
-        msg = `User: ${req.user.name}  can't delete user: ${id}. He is not admin `
-    }
+
+
     res.json({
         msg
     })

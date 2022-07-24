@@ -1,12 +1,15 @@
 
 const { Router } = require('express');
-const {validateJWT} = require('../middlewares/check-jwt');
 
+
+// Custom Middleware
+const { CheckFields,validateJWT,isRole} = require('../middlewares/index')
+
+//Middleware from express
 const {check} = require('express-validator');
-const {CheckFields} = require('../middlewares/checks');
 
-const Role = require('../models/role');
 
+// Controllers
 const { listUsersGet,
         getUser,
         usersPut,
@@ -14,22 +17,27 @@ const { listUsersGet,
         usersDelete,
         usersPatch } = require('../controllers/users');
 
+// Utils
 const { validateRole, validateDuplicateEmail, existIdUser } = require('../utils/db-validators');
+
 
 const router = Router();
 
-
+// Get route
 router.get('/list', listUsersGet );
 router.get('/',getUser);
 
+
+//Put route
 router.put('/:id',[
     check('id', "It isn't a id valid").isMongoId(),
     check('id').custom((id)=>existIdUser(id)),
     check('role').custom((role ) =>validateRole(role)),
-
     CheckFields
 ] ,usersPut );
 
+
+//Post route
 router.post('/',[
     check('email','The email is not valid').isEmail(),
     check('email').custom(email => validateDuplicateEmail(email)),
@@ -40,15 +48,19 @@ router.post('/',[
 ], usersPost );
 
 
-
+// Delete Route
 router.delete('/:id',
 [ validateJWT,
+  isRole("ADMIN_ROLE"),
   check('id', "It isn't a id valid").isMongoId(),
   check('id').custom((id)=>existIdUser(id))]
 , usersDelete );
 
-router.patch('/', usersPatch );
 
+
+
+//Path route
+router.patch('/', usersPatch );
 
 
 

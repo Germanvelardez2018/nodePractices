@@ -15,11 +15,14 @@ const validateJWT =  async(req,res=Response,next)=>{
         const {uid} = jwt.verify(token,process.env.SECRECTKEY);
         console.log(`user id:${uid}`);
         const userLogin = await User.findOne({_id:ObjectId(uid),
-            status: true });
+        status: true });
     
-            if(userLogin){
-                req.user = userLogin;
-            }
+       if(userLogin){
+           req.user = userLogin;
+       }
+       else{
+           res.status(200).json({msg: "user invalid"});
+       }
 
        
         next();
