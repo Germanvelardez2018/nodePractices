@@ -8,8 +8,6 @@ const login = async (req = Request,res = Response)=>{
 
     const {email, password}  = req.body;
     try {
-
-
         // Check if the email exist
         const user = await User.findOne({email,state: true});
         if(!user){
@@ -17,10 +15,6 @@ const login = async (req = Request,res = Response)=>{
                 msg: "User/Password are wrong"
             });
         }
-
-       
-        //Check if the user is actived
-       
         //Check the password
         const validPassword = bcryptjs. compareSync(password,user.password);// pass without crypt/ pass with crypt
         if(!validPassword){
@@ -28,16 +22,12 @@ const login = async (req = Request,res = Response)=>{
                 msg: "User/Password are wrong"
             });
         }
-
         //Generate the JWT
-
         const jwt = await getJwt(user.id);
-
         res.json({
             msg: 'login ok',
-            user: user.name,
+            user: user,
             jwt
-           
         });
         
     } catch (error) {

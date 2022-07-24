@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken');
 const getJwt  =  (data = '') =>{
 
     return new Promise((resolve,reject)=>{
-
-        const payload = { data };
+        const payload = { uid:data };
         jwt.sign(payload,process.env.SECRECTKEY,{
             expiresIn:'2h'
         },(err,token)=>{
@@ -20,8 +19,6 @@ const getJwt  =  (data = '') =>{
         }
         );
       });
-    
-  
 }
 
 
