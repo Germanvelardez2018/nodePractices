@@ -3,8 +3,6 @@ const User   = require('../models/user');
 const bcryptjs = require('bcryptjs');
 
 
-
-
 const getUser = async (req = request, res = response)=>{
     let obj = {};
     const {name,email} = req.query;

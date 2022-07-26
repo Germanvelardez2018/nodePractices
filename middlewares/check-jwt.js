@@ -12,7 +12,7 @@ const validateJWT =  async(req,res=Response,next)=>{
     }
     try {
         console.log('estamos aqui')
-        const {uid} = jwt.verify(token,process.env.SECRECTKEY);
+        const {uid} = jwt.verify(token,process.env.SECRETKEY);
         console.log(`user id:${uid}`);
         const userLogin = await User.findOne({_id:ObjectId(uid),
         status: true });
