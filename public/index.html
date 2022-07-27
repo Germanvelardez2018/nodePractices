@@ -59,8 +59,6 @@
            })
                 .then(r => r.json())
                 .then(res => {
-                  //  console.log(res);
-                  
                     localStorage.setItem('email',res.user.email);
                     location.reload();
 
