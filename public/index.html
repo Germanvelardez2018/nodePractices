@@ -23,40 +23,53 @@
         data-logo_alignment="left">
     </div>
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <button id="google_signout">
+        Signout
+    </button>
+
+    
     <script>
+
+        const button = document.getElementById('google_signout');
+        button.onclick =()=>{
+            console.log("hiciste click")
+            console.log(google.accounts.id);
+            google.accounts.id.disableAutoSelect();
+            google.accounts.id.revoke(localStorage.getItem('email'),
+                done =>{
+                   localStorage.clear();
+                   location.reload();
+        });
+        }
         function handleCredentialResponse(response) {
-           // decodeJwtResponse() is a custom function defined by you
-           // to decode the credential response.
 
-           // Google token : ID TOKEN
 
-        //   console.log('ID_TOKEN',response.credential);
-           fetch("http://localhost:8080/api/auth/google?",{
-            method:'post',
+        console.log('data')
+        console.log(response.credential)
+        const body = {id_token: response.credential};
+
+           fetch("http://localhost:8080/api/auth/google",{
+            method:'POST',
             headers: {
                 'Content-Type':'application/json',
             },
-            body: JSON.stringify({
-                id_token : response.credential,
-                email: 'germandevz@gmail.com'
-            })
+            body: JSON.stringify(body)
            })
-                .then(res => res.json())
+                .then(r => r.json())
                 .then(res => {
-                    console.log(res);
+                  //  console.log(res);
+                  
+                    localStorage.setItem('email',res.user.email);
+                    location.reload();
+
                 })
-                .catch(error =>console.warn('error'))
-                        //const responsePayload = decodeJwtResponse(response.credential);
-      
-          // console.log("ID: " + responsePayload.sub);
-          // console.log('Full Name: ' + responsePayload.name);
-          // console.log('Given Name: ' + responsePayload.given_name);
-          // console.log('Family Name: ' + responsePayload.family_name);
-          // console.log("Image URL: " + responsePayload.picture);
-          // console.log("Email: " + responsePayload.email);
+                .catch(error =>console.warn);            
+  
+
+          
         }
       </script>
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
     
 </body>
 </html>

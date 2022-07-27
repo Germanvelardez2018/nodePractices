@@ -44,17 +44,44 @@ const login = async (req = Request,res = Response)=>{
 const googleSignIn = async (req = Request,res = Response)=>{
 
     const {id_token} = req.body;
+    let user ;
     try {
-        const googleUser = await  googleVerify(id_token);
+        const data = await googleVerify(id_token);
+        const {email,name,img}= data;
+        user = await User.findOne({ email});
+        if(!user){
+        // if email doesn't exist in db
+         const newUser ={
+              name,
+              email,
+              password:'Boca Jr moriste en Madrid',
+              img,
+              google: true
+          }
+          user = new User(newUser);
+          await user.save();   
+        }
+
+        if(!user.state){
+            return res.status(401).json({
+                msg: 'User blocked, please contact to the administrator'
+            });
+        }
     } catch (error) {
         res.status(400).json({
             msg:'google token error'
         })
     }
 
+    // Generate the JWT
+
+    const jwt = await getJwt(user.id);
+
     res.json({
         msg:'Everthing is ok',
-        id_token
+        id_token,
+        user,
+        jwt
     });
 
 }
