@@ -4,26 +4,39 @@ const {check} = require('express-validator');
 const {CheckFields} = require('../middlewares/checks');
 const { validate } = require('../models/user');
 
-
+const{existIdCategory} = require("../utils/db-validators");
 const {validateJWT} = require('../middlewares/check-jwt');
         
-const {createCategory} = require('../controllers/category');
+const { createCategory, 
+        getListCategories,
+        getCategoryByName,
+        getCategoryById
+       } = require('../controllers/category');
 
 
 const controler = (req,res)=>{
     res.json({ msg: "ok"});
 }
       
+
+
+
 const router = Router();
 
 
 
 
 // Get a list of category
-router.get('/list',[],controler);
+router.get('/list',getListCategories);
 
-// Get a category by id
-router.get('/:id',[],controler);
+
+//Get a category by id
+router.get('/:id',[
+   check('id', "It isn't a id valid").isMongoId(),
+   check('id').custom((id)=>existIdCategory(id)),
+                        CheckFields],
+                        getCategoryById);
+
 
 // Create a new category, it requires valid token
 router.post('/add',[
