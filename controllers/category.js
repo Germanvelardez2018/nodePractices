@@ -1,7 +1,11 @@
 const { response, request } = require('express');
 const {User}   = require('../models/index');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken')
 
+const {Category} = require("../models");
+
+const ObjectId = require('mongodb').ObjectId;
 
 const getUser = async (req = request, res = response)=>{
     let obj = {};
@@ -110,11 +114,45 @@ const usersDelete = async (req, res = response) => {
 
 
 
+
+const createCategory = async (req,res=response)=>{
+    const name = req.body.name.toUpperCase();
+    const categoryDb = await Category.findOne({name});
+    if(categoryDb){
+        return res.status(400).json({
+            msg: `the category:"${name}" already exists`
+        });
+    }   
+    try {
+        newCategory = await new Category({
+            name,
+            createdBy:req.user._id,
+        });
+        await newCategory.save();
+        return res.status(200).json({
+            msg: `the category:"${name}" was created`
+        });
+    } catch (error) {
+        return res.status(400).json({
+            msg: `the category:"${name}" was't created. Error ${error}`
+        });
+
+        
+    }
+        
+       
+      
+       
+       
+    
+    
+
+}
+
+
+
+
+
 module.exports = {
-    listUsersGet,
-    getUser,
-    usersPost,
-    usersPut,
-    usersPatch,
-    usersDelete,
+    createCategory
 }
