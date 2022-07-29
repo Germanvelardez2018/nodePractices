@@ -30,9 +30,10 @@ router.get('/',getUser);
 
 //Put route
 router.put('/:id',[
+    validateJWT,
+    isRole("ADMIN_ROLE"),
     check('id', "It isn't a id valid").isMongoId(),
     check('id').custom((id)=>existIdUser(id)),
-    check('role').custom((role ) =>validateRole(role)),
     CheckFields
 ] ,usersPut );
 
@@ -56,11 +57,6 @@ router.delete('/:id',
   check('id').custom((id)=>existIdUser(id))]
 , usersDelete );
 
-
-
-
-//Path route
-router.patch('/', usersPatch );
 
 
 

@@ -1,23 +1,16 @@
 const { Router } = require('express');
 const {login, googleSignIn} = require('../controllers/auth');
 const {check} = require('express-validator');
-const {CheckFields} = require('../middlewares/checks');
-const { validate } = require('../models/user');
+const { CheckFields,validateJWT,isRole} = require('../middlewares/index')
+const { existIdCategory,validateRole, validateDuplicateEmail, existIdUser } = require('../utils/db-validators');
 
-const{existIdCategory} = require("../utils/db-validators");
-const {validateJWT} = require('../middlewares/check-jwt');
-        
+// Controllers
 const { createCategory, 
         getListCategories,
-        getCategoryByName,
-        getCategoryById
+        getCategoryById,
+        putCategory,
+        deleteCategory
        } = require('../controllers/category');
-
-
-const controler = (req,res)=>{
-    res.json({ msg: "ok"});
-}
-      
 
 
 
@@ -48,13 +41,28 @@ router.post('/add',[
 
 
 //Update  a category, it requires a valid token
-router.put('/:id',[],controler);
+router.put('/:id',
+            validateJWT,
+            isRole("ADMIN_ROLE"),
+            [check('id', "It isn't a id valid").isMongoId(),
+            check('id').custom((id)=>existIdCategory(id)),
+            CheckFields],
+                putCategory);
 
 
 
 //Delete   a category, it requires a valid token and ADMIN ROLE
-router.delete('/:id',[],controler);
+router.delete('/:id',
+[   validateJWT,
+    isRole("ADMIN_ROLE"),
+    check('id', "It isn't a id valid").isMongoId(),
+    check('id').custom((id)=>existIdUser(id))],
+    deleteCategory);
 
 
 
+
+
+
+    
 module.exports = router;

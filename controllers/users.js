@@ -44,7 +44,7 @@ const listUsersGet = async (req = request, res = response) => {
 }
 
 
-
+// Ser params from json
 
 const usersPost = async  (req, res = response) => {
     const{name, email, password, role}= req.body;
@@ -66,6 +66,7 @@ const usersPost = async  (req, res = response) => {
 }
 
 
+// Set params from json
 
 const usersPut = async (req, res = response) => {
     const { id } = req.params;
@@ -78,9 +79,10 @@ const usersPut = async (req, res = response) => {
     }
     const user = await User.findByIdAndUpdate(id,restBody);
     res.json({
-        msg: 'put API - usersPut',
+        msg:  `data update`,
+        restBody,
         id,
-        user
+        user,
     });
 }
 
@@ -97,11 +99,8 @@ const usersDelete = async (req, res = response) => {
         const user = await User.findByIdAndUpdate(id,{state:false});
         msg = `the ${user} was deleted bt user: ${req.user.name}`;
     } catch (error) {
-        msg = `err ${error} `
-        
+        msg = `err ${error} `   ;
     }
-
-
     res.json({
         msg
     })
