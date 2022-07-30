@@ -12,13 +12,13 @@ class Server {
             "auth",
             "categories",
             'users',
-            'products'
+            'products',
+            'searches'
         ];
         
 
         //Database
         this.connnectDataBase();
-
 
         // Middlewares
         this.middlewares();
