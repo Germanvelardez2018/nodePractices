@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const {Response,Resquest} = require('express');
 
 const isRole = (...roles)=>{
-
-
     return (req,res,next)=>{
         if(! req.user){
             res.status(500).json({

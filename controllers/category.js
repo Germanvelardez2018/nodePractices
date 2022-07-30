@@ -43,7 +43,7 @@ const getListCategories = async(req, res=response)=>{
 // Create a new category. You need a token valid
 const createCategory = async (req,res=response)=>{
     const name = req.body.name.toUpperCase();
-    const categoryDb = await Category.findOne({name}).populated('createdBy');
+    const categoryDb = await Category.findOne({name}).populate('createdBy');
     if(categoryDb){
         return res.status(400).json({
             msg: `the category:"${name}" already exists`
@@ -81,7 +81,7 @@ const putCategory = async (req, res = response) => {
     }
 
     // Validate if the id exit
-    const category = await Category.findByIdAndUpdate(id,obj);
+    const category = await Category.findByIdAndUpdate(id,obj,{new: true});
     res.json({
         msg: 'Update data',
         obj,
@@ -96,7 +96,7 @@ const deleteCategory = async (req,res=response)=> {
     const { id } = req.params;    
     let msg = '';
     try {
-        const category = await Category.findByIdAndUpdate(id,{state:false});
+        const category = await Category.findByIdAndUpdate(id,{state:false},{new: true});
         msg = `Category:${category.name} was deleted `;
     } catch (error) {
         msg = `err ${error} `   

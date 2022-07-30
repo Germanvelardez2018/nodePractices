@@ -8,14 +8,13 @@ class Server {
         this.app  = express();
         this.port = process.env.PORT;
 
-        
         this.Paths =[
             "auth",
             "categories",
             'users',
+            'products'
         ];
         
-
 
         //Database
         this.connnectDataBase();

@@ -2,7 +2,7 @@ const { Schema,model } = require("mongoose");
 
 
 
-const categorySchemma = Schema ({
+const CategorySchemma = Schema ({
     name : {
         type: String,
         required: [true,'The name is required'],
@@ -21,11 +21,11 @@ const categorySchemma = Schema ({
 });
 
 
-categorySchemma.methods.toJSON = function (){
+CategorySchemma.methods.toJSON = function (){
     const {__v, state,_id, ...dataPublic} = this.toObject();
     dataPublic.uid = _id;
     return dataPublic
 }
 
 
-module.exports =  model('Category',categorySchemma);
+module.exports =  model('Category',CategorySchemma);
