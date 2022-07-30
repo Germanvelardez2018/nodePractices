@@ -56,7 +56,7 @@ const googleSignIn = async (req = Request,res = Response)=>{
          const newUser ={
               name,
               email,
-              password:'Boca Jr moriste en Madrid',
+              password:'xxx',
               img,
               google: true
           }
@@ -66,11 +66,12 @@ const googleSignIn = async (req = Request,res = Response)=>{
 
         if(!user.state){
             return res.status(401).json({
-                msg: 'User blocked, please contact to the administrator'
+                msg: 'User blocked, please contact to the administrator',
+                user: user
             });
         }
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             msg:'google token error'
         })
     }

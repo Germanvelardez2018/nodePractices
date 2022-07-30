@@ -31,6 +31,7 @@
     <script>
 
         const button = document.getElementById('google_signout');
+
         button.onclick =()=>{
             console.log("hiciste click")
             console.log(google.accounts.id);
@@ -41,16 +42,15 @@
                    location.reload();
         });
         }
+
+
         function handleCredentialResponse(response) {
-
-
         const url = (window.location.hostname.includes('localhost'))? 'http://localhost:8080/api/auth/google': "https://simo-app-2022.herokuapp.com/api/auth/google"
-
         console.log('data')
         console.log(response.credential)
         const body = {id_token: response.credential};
 
-           fetch("http://localhost:8080/api/auth/google",{
+           fetch(url,{
             method:'POST',
             headers: {
                 'Content-Type':'application/json',
@@ -59,11 +59,17 @@
            })
                 .then(r => r.json())
                 .then(res => {
+                    localStorage.clear();
                     localStorage.setItem('email',res.user.email);
                     location.reload();
 
                 })
-                .catch(error =>console.warn);            
+                .catch(error =>{
+                    localStorage.clear();
+                    localStorage.setItem('email',error.user.email);
+                    location.reload();
+                    console.warn("the user has problems.")
+                });            
   
 
           
