@@ -21,7 +21,7 @@ const router = Router();
 
 
 
-router.get('/:collection/:items',[
+router.get('/:collection/:name',[
   //  check('email','Email is required').not().isEmpty(),
   //  check('id_token','ID Token is required').not().isEmpty(),
   //  CheckFields
